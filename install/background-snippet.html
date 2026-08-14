@@ -1,21 +1,16 @@
-<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>DeepSeek Harness</title>
-    <script type="module" crossorigin src="/assets/index-Dqw48FrP.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/vendor-Cjbwl5VI.js">
-    <link rel="stylesheet" crossorigin href="/assets/vendor-CjyC-hUb.css">
-    <link rel="stylesheet" crossorigin href="/assets/index-CSGf6Qzd.css">
-    <link rel="stylesheet" href="/whale-icon.css?v=10" />
-    <link rel="stylesheet" href="/apple-style.css?v=13" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script>
+<!--
+  ============================================================
+  DSH 背景动画补丁(跨 DSH 版本通用,不依赖构建哈希)
+  安装方法:
+  1. 找到目标机器上 DSH 的 dist/index.html
+  2. 把下面整个 <script> ... </script> 块复制,
+     粘贴到该文件末尾的 </body> 之前
+  3. 保存,硬刷新页面(Ctrl+Shift+R)
+  说明:本脚本只用稳定 DOM 特征(canvas 元素、
+  data-composer-card 属性、class 后缀 _primary),
+  在任意 DSH 前端构建上都能工作。
+  ============================================================
+--><script>
 (function () {
   var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var canvas = document.createElement('canvas');
@@ -521,7 +516,7 @@ var WHALE = 'M22.917 1.43C22.671 1.31 22.566 1.539 22.422 1.655C22.373 1.693 22.
   })();
   var btnCanvases = [];
   function attachButtonWhale() {
-    var btns = document.querySelectorAll('[data-composer-card] button[class*=uV2eYG_primary]');
+    var btns = document.querySelectorAll('[data-composer-card] button[class*="_primary"]');
     for (var bi = 0; bi < btns.length; bi++) {
       var btn = btns[bi];
       if (btn.__dshWhaleCanvas && btn.__dshWhaleCanvas.parentElement === btn) continue;
@@ -537,7 +532,7 @@ var WHALE = 'M22.917 1.43C22.671 1.31 22.566 1.539 22.422 1.655C22.373 1.693 22.
   function drawButtonWhale() {
     if (document.hidden || paused) return;
     var need = false;
-    var probe = document.querySelectorAll('[data-composer-card] button[class*=uV2eYG_primary]');
+    var probe = document.querySelectorAll('[data-composer-card] button[class*="_primary"]');
     for (var pi = 0; pi < probe.length; pi++) {
       var psvg = probe[pi].querySelector('svg');
       var prun = !!(psvg && psvg.querySelector('rect'));
@@ -587,5 +582,3 @@ var WHALE = 'M22.917 1.43C22.671 1.31 22.566 1.539 22.422 1.655C22.373 1.693 22.
   })();
 })();
     </script>
-  </body>
-</html>
