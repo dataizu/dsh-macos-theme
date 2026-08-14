@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>DeepSeek Harness</title>
+    <script type="module" crossorigin src="/assets/index-Dqw48FrP.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-Cjbwl5VI.js">
+    <link rel="stylesheet" crossorigin href="/assets/vendor-CjyC-hUb.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-CSGf6Qzd.css">
+    <link rel="stylesheet" href="/whale-icon.css?v=10" />
+    <link rel="stylesheet" href="/apple-style.css?v=12" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+(function () {
+  var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var canvas = document.createElement('canvas');
+  canvas.id = 'dsh-bg-canvas';
+  canvas.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(canvas);
+  var ctx = canvas.getContext('2d');
+  var DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+  var vw = window.innerWidth, vh = window.innerHeight;
+
+  var WHALE = '__WHALE_PATH__';
+  var GRID_W = 30, GRID_H = 22;
+  var s = document.createElement('canvas');
+  s.width = GRID_W * 2; s.height = GRID_H * 2;
+  var sc = s.getContext('2d');
+  sc.fillStyle = '#fff';
+  var p2 = new Path2D(WHALE);
+  var k = Math.min((GRID_W * 2 - 4) / 23.16, (GRID_H * 2 - 4) / 17.04);
+  sc.translate(((GRID_W * 2) - 23.16 * k) / 2, ((GRID_H * 2) - 17.04 * k) / 2);
+  sc.scale(k, k);
+  sc.fill(p2);
+  var pix = sc.getImageData(0, 0, GRID_W * 2, GRID_H * 2).data;
+  var cells = [];
+  for (var gy = 0; gy < GRID_H; gy++) {
+    for (var gx = 0; gx < GRID_W; gx++) {
+      var al = pix[((gy * 2 + 1) * GRID_W * 2 + (gx * 2 + 1)) * 4 + 3];
+      if (al > 128 && (gx + gy) % 2 === 0) cells.push({ gx: gx, gy: gy, j: Math.random() });
+    }
+  }
+  canvas.dataset.whaleDots = String(cells.length);
+
+  var PITCH = 150;
+  var cols = 0, rows = 0, dots = [], index = {};
+  function buildLattice() {
+    cols = Math.ceil(vw / PITCH) + 1;
+    rows = Math.ceil(vh / PITCH) + 1;
+    dots = [];
+    index = {};
+    for (var gj = 0; gj < rows; gj++) {
+      for (var gi = 0; gi < cols; gi++) {
+        if (Math.random() < 0.10) continue;
+        var d = {
+          gi: gi, gj: gj,
+          x: (gi + (Math.random() - 0.5) * 0.85) / cols,
+          y: (gj + (Math.random() - 0.5) * 0.85) / rows,
+          vx: (Math.random() - 0.5) * 0.00016,
+          vy: (Math.random() - 0.5) * 0.00016,
+          r: 2 + Math.random() * 0.6
+        };
+        dots.push(d);
+        index[gi + ',' + gj] = d;
+      }
+    }
+    canvas.dataset.latticeDots = String(dots.length);
+  }
+
+  function resize() {
+    vw = window.innerWidth; vh = window.innerHeight;
+    canvas.width = Math.floor(vw * DPR);
+    canvas.height = Math.floor(vh * DPR);
+    buildLattice();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var mouse = { x: -9999, y: -9999 };
+  window.addEventListener('mousemove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+  var start = Date.now();
+  function push(px, py) {
+    var dx = px - mouse.x, dy = py - mouse.y;
+    var d2 = dx * dx + dy * dy;
+    var R = 150;
+    if (d2 >= R * R || mouse.x < -9000) return [px, py, 1];
+    var d = Math.sqrt(d2) || 0.001;
+    var f = (1 - d / R);
+    var shift = f * f * 46;
+    var dim = 0.35 + 0.65 * (d / R);
+    return [px + (dx / d) * shift, py + (dy / d) * shift, dim];
+  }
+  function whaleDots(now) {
+    var W = Math.min(720, vw * 0.64);
+    var pitch = W / GRID_W;
+    var cx = vw / 2, cy = vh * 0.40;
+    var bob = Math.sin(now * 0.0009) * 8;
+    var t = now * 0.0022;
+    var out = [];
+    for (var i = 0; i < cells.length; i++) {
+      var c = cells[i];
+      var dx = (c.gx + 0.5 - GRID_W / 2 + (c.j - 0.5) * 0.55) * pitch;
+      var dy = (c.gy + 0.5 - GRID_H / 2 + (c.j - 0.5) * 0.55) * pitch;
+      var xn = (c.gx + 0.5) / GRID_W;
+      var amp = Math.pow(xn, 1.6) * 16;
+      dy += amp * Math.sin(t - xn * 6.5);
+      out.push({ x: cx + dx, y: cy + dy + bob, r: 2.1, o: 0.12 + c.j * 0.10 });
+    }
+    return out;
+  }
+  function draw() {
+    var now = Date.now() - start;
+    var dark = document.body.hasAttribute('data-ds-dark-theme');
+    var dotRGB = dark ? '130,160,255' : '80,115,254';
+    var lineRGB = dark ? '150,185,255' : '95,135,255';
+    var wds = whaleDots(now);
+    var i, j, a, b, dx, dy, d2, ax, ay, bx, by, pp;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (mouse.x > -9000) {
+      var g = ctx.createRadialGradient(mouse.x * DPR, mouse.y * DPR, 0, mouse.x * DPR, mouse.y * DPR, 520 * DPR);
+      g.addColorStop(0, 'rgba(90,125,255,' + (dark ? 0.12 : 0.07) + ')');
+      g.addColorStop(1, 'rgba(90,125,255,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    for (i = 0; i < wds.length; i++) {
+      a = wds[i];
+      pp = push(a.x, a.y);
+      a.x = pp[0]; a.y = pp[1]; a.o = a.o * pp[2];
+      for (j = i + 1; j < wds.length; j++) {
+        b = wds[j];
+        dx = a.x - b.x; dy = a.y - b.y;
+        d2 = dx * dx + dy * dy;
+        if (d2 < 576) {
+          ctx.strokeStyle = 'rgba(' + lineRGB + ',' + (0.08 * (1 - Math.sqrt(d2) / 24)).toFixed(3) + ')';
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(a.x * DPR, a.y * DPR); ctx.lineTo(b.x * DPR, b.y * DPR); ctx.stroke();
+        }
+      }
+    }
+    for (i = 0; i < dots.length; i++) {
+      a = dots[i];
+      ax = a.x * vw; ay = a.y * vh;
+      ay += Math.sin(now * 0.0013 - a.x * 9) * 5 + Math.sin(now * 0.0009 - a.x * 5 + a.y * 7) * 3;
+      pp = push(ax, ay);
+      ax = pp[0]; ay = pp[1];
+      var dimA = pp[2];
+      for (j = i + 1; j < dots.length; j++) {
+        b = dots[j];
+        if (Math.abs(a.gi - b.gi) > 1 || Math.abs(a.gj - b.gj) > 1) continue;
+        bx = b.x * vw; by = b.y * vh;
+        dx = ax - bx; dy = ay - by;
+        d2 = dx * dx + dy * dy;
+        if (d2 < 27200) {
+          ctx.strokeStyle = 'rgba(' + lineRGB + ',' + (0.15 * (1 - Math.sqrt(d2) / 165)).toFixed(3) + ')';
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(ax * DPR, ay * DPR); ctx.lineTo(bx * DPR, by * DPR); ctx.stroke();
+        }
+      }
+      for (j = 0; j < wds.length; j += 3) {
+        b = wds[j];
+        dx = ax - b.x; dy = ay - b.y;
+        d2 = dx * dx + dy * dy;
+        if (d2 < 16900) {
+          ctx.strokeStyle = 'rgba(' + lineRGB + ',' + (0.06 * (1 - Math.sqrt(d2) / 130)).toFixed(3) + ')';
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(ax * DPR, ay * DPR); ctx.lineTo(b.x * DPR, b.y * DPR); ctx.stroke();
+        }
+      }
+      ctx.fillStyle = 'rgba(' + dotRGB + ',' + (0.50 * dimA).toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(ax * DPR, ay * DPR, a.r * DPR, 0, 6.2832); ctx.fill();
+    }
+    for (i = 0; i < wds.length; i++) {
+      a = wds[i];
+      ctx.fillStyle = 'rgba(' + dotRGB + ',' + a.o.toFixed(3) + ')';
+      ctx.beginPath(); ctx.arc(a.x * DPR, a.y * DPR, a.r * DPR, 0, 6.2832); ctx.fill();
+    }
+  }
+  if (reduced) { draw(); return; }
+  var last = 0;
+  function step(t) {
+    requestAnimationFrame(step);
+    if (t - last < 33) return;
+    last = t;
+    for (var m = 0; m < dots.length; m++) {
+      var d = dots[m];
+      d.x += d.vx; d.y += d.vy;
+      if (d.x < -0.04) d.x = 1.04; else if (d.x > 1.04) d.x = -0.04;
+      if (d.y < -0.04) d.y = 1.04; else if (d.y > 1.04) d.y = -0.04;
+    }
+    draw();
+  }
+  requestAnimationFrame(step);
+
+  /* ==== Send-button dot-matrix whale (60fps) ==== */
+  var BGW = 20, BGH = 15;
+  var bCells = [];
+  (function () {
+    var bs = document.createElement('canvas');
+    bs.width = BGW * 2; bs.height = BGH * 2;
+    var bsc = bs.getContext('2d');
+    bsc.fillStyle = '#fff';
+    var bp = new Path2D(WHALE);
+    var bk = Math.min((BGW * 2 - 2) / 23.16, (BGH * 2 - 2) / 17.04);
+    bsc.translate(((BGW * 2) - 23.16 * bk) / 2, ((BGH * 2) - 17.04 * bk) / 2);
+    bsc.scale(bk, bk);
+    bsc.fill(bp);
+    var bpix = bsc.getImageData(0, 0, BGW * 2, BGH * 2).data;
+    for (var by = 0; by < BGH; by++) {
+      for (var bx = 0; bx < BGW; bx++) {
+        var ba = bpix[((by * 2 + 1) * BGW * 2 + (bx * 2 + 1)) * 4 + 3];
+        if (ba > 128) {
+          var yb = (by + 0.5) / BGH;
+          var cr = Math.round(255 + (175 - 255) * yb);
+          var cg = Math.round(255 + (215 - 255) * yb);
+          bCells.push({ gx: bx, gy: by, rgb: cr + ',' + cg + ',255' });
+        }
+      }
+    }
+  })();
+  var btnCanvases = [];
+  function attachButtonWhale() {
+    var btns = document.querySelectorAll('[data-composer-card] button[class*=uV2eYG_primary]');
+    for (var bi = 0; bi < btns.length; bi++) {
+      var btn = btns[bi];
+      if (btn.__dshWhaleCanvas && btn.__dshWhaleCanvas.parentElement === btn) continue;
+      var cvs = document.createElement('canvas');
+      cvs.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:3';
+      cvs.width = 68; cvs.height = 68;
+      btn.appendChild(cvs);
+      btn.__dshWhaleCanvas = cvs;
+    }
+  }
+  setInterval(attachButtonWhale, 600);
+  function drawButtonWhale() {
+    for (var bi = 0; bi < btnCanvases.length; bi++) btnCanvases.pop();
+    var btns = document.querySelectorAll('[data-composer-card] button[class*=uV2eYG_primary]');
+    for (var bi = 0; bi < btns.length; bi++) {
+      var btn = btns[bi];
+      var cvs = btn.__dshWhaleCanvas;
+      if (!cvs || cvs.parentElement !== btn) continue;
+      var c2 = cvs.getContext('2d');
+      c2.clearRect(0, 0, cvs.width, cvs.height);
+      var svg = btn.querySelector('svg');
+      var running = !!(svg && svg.querySelector('rect'));
+      var now = Date.now();
+      var W = cvs.width, H = cvs.height;
+      var whaleW = W * 0.82;
+      var pitch = whaleW / BGW;
+      var cx = W / 2, cy = H / 2;
+      var t = now * 0.0052;
+      var bob = running ? Math.sin(now * 0.0022) * 1.6 : 0;
+      for (var i = 0; i < bCells.length; i++) {
+        var c = bCells[i];
+        var dx = (c.gx + 0.5 - BGW / 2) * pitch;
+        var dy = (c.gy + 0.5 - BGH / 2) * pitch;
+        if (running) {
+          var xn = (c.gx + 0.5) / BGW;
+          dy += Math.pow(xn, 1.35) * 4 * Math.sin(t - xn * 6.5);
+          dy += bob;
+        }
+        c2.fillStyle = 'rgba(' + c.rgb + ',0.92)';
+        c2.beginPath();
+        c2.arc(cx + dx, cy + dy, pitch * 0.38, 0, 6.2832);
+        c2.fill();
+      }
+    }
+  }
+  (function btnLoop() {
+    requestAnimationFrame(btnLoop);
+    drawButtonWhale();
+  })();
+})();
+    </script>
+  </body>
+</html>
