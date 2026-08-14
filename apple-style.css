@@ -128,7 +128,7 @@ body[data-ds-dark-theme] ::selection{background:rgba(10,132,255,0.35)}
 body[data-ds-dark-theme] :focus-visible{outline-color:rgba(10,132,255,0.65)}
 svg path[stroke],svg circle[stroke],svg rect[stroke],svg line[stroke]{stroke-linecap:round;stroke-linejoin:round}
 svg[viewBox="0 0 16 16"] path[stroke]{stroke-width:1.5px}
-body .VOzbGW_panel{border-radius:16px}
+body .VOzbGW_panel{border-radius:16px;width:1000px;max-width:calc(100vw - 48px)}
 body .VOzbGW_trigger{border-radius:8px}
 body .VOzbGW_navCell{border-radius:8px}
 ._dialog_15u5s_22{border-radius:16px}
