@@ -3,6 +3,26 @@
 给 [DeepSeek Harness](https://www.deepseek.com) Web GUI 用的 **macOS 风格主题 + 水中鲸鱼动态背景**。
 适用于本地运行的 DeepSeek Harness Web 界面。
 
+## 🖼️ 预览
+
+> 截图来自仓库内 `demo/preview.html`(纯演示页,使用真实主题 CSS 与背景脚本,内容为虚构示例)。
+
+### 浅色模式(运行中)
+
+![浅色模式](screenshots/light.png)
+
+### 深色模式
+
+![深色模式](screenshots/dark.png)
+
+### 设置面板
+
+![设置面板](screenshots/settings.png)
+
+### 轨迹视图
+
+![轨迹视图](screenshots/trajectory.png)
+
 ## ✨ 效果一览
 
 - **水中鲸鱼背景**:极淡水色渐变(底部透明)+ 上升气泡(水面爆开)+ 点阵鲸鱼巡游(S 形行进波、尾部大摆、受惊吐泡)
