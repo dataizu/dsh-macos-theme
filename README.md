@@ -1,4 +1,4 @@
-# 🐋 鲸鱼戏水 · DSH Whale Aqua Theme
+# 🐋 鲸蓝戏水 · DSH Whale Aqua Theme
 
 给 [DeepSeek Harness](https://www.deepseek.com) Web GUI 用的 **macOS 风格主题 + 水中鲸鱼动态背景**。
 适用于本地运行的 DeepSeek Harness Web 界面。
