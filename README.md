@@ -15,6 +15,10 @@
 
 ![浅色模式](screenshots/light.png)
 
+### 鲸鱼发送按钮(特写)
+
+![鲸鱼发送按钮](screenshots/button.png)
+
 ### 深色模式
 
 ![深色模式](screenshots/dark.png)
@@ -148,7 +152,7 @@ cp <THEME>/whale-icon.css   <DIST>/whale-icon.css
 
 | 想调什么 | 在哪里 |
 | --- | --- |
-| 发送按钮喷水位置/大小 | `whale-icon.css` 中 `::before`(水柱)与 `::after`(水滴)的 `left/top/width/height` |
+| 发送按钮喷水位置/大小 | `whale-icon.css` 中 `::before` / `::after`(两粒水泡)的 `left/top/width/height` |
 | 输入框发光强弱/流速 | `apple-style.css` 中 `dsh-jelly-breathe` / `dsh-jelly-flow` 关键帧 |
 | 对话区毛玻璃透明度/模糊 | `apple-style.css` 中 `body .Md3f7G_scroll` |
 | 背景气泡数量/大小/速度 | `install/background-snippet.html` 脚本中 `BUB_CAP`、`newBubble` |
