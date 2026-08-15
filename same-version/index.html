@@ -12,7 +12,7 @@
     <link rel="stylesheet" crossorigin href="/assets/vendor-CjyC-hUb.css">
     <link rel="stylesheet" crossorigin href="/assets/index-CSGf6Qzd.css">
     <link rel="stylesheet" href="/whale-icon.css?v=10" />
-    <link rel="stylesheet" href="/apple-style.css?v=13" />
+    <link rel="stylesheet" href="/apple-style.css?v=14" />
   </head>
   <body>
     <div id="root"></div>
@@ -522,7 +522,7 @@ var WHALE = 'M22.917 1.43C22.671 1.31 22.566 1.539 22.422 1.655C22.373 1.693 22.
   })();
   var btnCanvases = [];
   function attachButtonWhale() {
-    var btns = document.querySelectorAll('[data-composer-card] button[class*=uV2eYG_primary]');
+    var btns = document.querySelectorAll('[data-composer-card] button[class*="_primary"]');
     for (var bi = 0; bi < btns.length; bi++) {
       var btn = btns[bi];
       if (btn.__dshWhaleCanvas && btn.__dshWhaleCanvas.parentElement === btn) continue;
@@ -538,7 +538,7 @@ var WHALE = 'M22.917 1.43C22.671 1.31 22.566 1.539 22.422 1.655C22.373 1.693 22.
   function drawButtonWhale() {
     if (document.hidden || paused) return;
     var need = false;
-    var probe = document.querySelectorAll('[data-composer-card] button[class*=uV2eYG_primary]');
+    var probe = document.querySelectorAll('[data-composer-card] button[class*="_primary"]');
     for (var pi = 0; pi < probe.length; pi++) {
       var psvg = probe[pi].querySelector('svg');
       var prun = !!(psvg && psvg.querySelector('rect'));

@@ -209,14 +209,8 @@
   }
 })();
 </script>
-<script> ... </script> 块复制,
-     粘贴到该文件末尾的 </body> 之前
-  3. 保存,硬刷新页面(Ctrl+Shift+R)
-  说明:本脚本只用稳定 DOM 特征(canvas 元素、
-  data-composer-card 属性、class 后缀 _primary),
-  在任意 DSH 前端构建上都能工作。
-  ============================================================
---><script>
+<!-- 背景动画脚本:与 install/background-snippet.html 中的脚本完全一致 -->
+<script>
 (function () {
   var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var canvas = document.createElement('canvas');

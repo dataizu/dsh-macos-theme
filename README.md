@@ -154,7 +154,7 @@ cp <THEME>/whale-icon.css   <DIST>/whale-icon.css
 | `whale-icon.css` | 发送按钮鲸鱼图标与喷水动画(跨版本) |
 | `install/background-snippet.html` | 背景动画脚本补丁(跨版本,拼进自己的 index.html) |
 | `same-version/index.html` | 完整页面(仅同版本构建可用) |
-| `whale-path.txt` | DeepSeek 官方鲸鱼 SVG path(点阵采样数据源) |
+| `whale-path.txt` | DeepSeek 官方鲸鱼 SVG path 的压缩版(3 位小数,点阵采样数据源) |
 | `template.html` | index.html 模板(鲸鱼 path 用 `__WHALE_PATH__` 占位) |
 | `reference/hero-whale.svg` | 官方 hero 鲸鱼 SVG 参考 |
 
