@@ -138,13 +138,13 @@
           <div class="demo-traj-row"><span class="Y0dWHa_kindTag tag-sys">系统</span><span class="nm">turn/end</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">回合结束</span></div>
         </div>
       </div>
-      <!-- 输入框(运行态:停止图标 → 触发喷水+水母发光) -->
+      <!-- 输入框(状态由 ?btn=idle|typing|running 切换,默认 running) -->
       <div class="demo-composer">
         <div class="uV2eYG_card" data-composer-card>
-          <div class="demo-placeholder">继续输入…</div>
+          <div class="demo-placeholder" id="demo-composer-text"></div>
           <div class="demo-row">
             <span></span>
-            <button type="button" class="uV2eYG_primary" aria-label="停止">
+            <button type="button" class="uV2eYG_primary" id="demo-send-btn" aria-label="停止">
               <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><rect x="3" y="3" width="10" height="10" rx="3" fill="currentColor"/></svg>
             </button>
           </div>
@@ -180,7 +180,7 @@
   </div>
 </div>
 <script>
-/* 视图/主题切换:?dark=1 深色;?view=settings|traj */
+/* 视图/主题切换:?dark=1 深色;?view=settings|traj;?btn=idle|typing|running 按钮状态 */
 (function () {
   var q = new URLSearchParams(location.search);
   if (q.get('dark') === '1') {
@@ -193,6 +193,20 @@
   var settings = document.getElementById('view-settings');
   if (v === 'traj') { chat.classList.add('hidden'); traj.classList.remove('hidden'); }
   if (v === 'settings') { settings.classList.remove('hidden'); }
+  var b = q.get('btn');
+  var btnEl = document.getElementById('demo-send-btn');
+  var textEl = document.getElementById('demo-composer-text');
+  if (b === 'idle' || b === 'typing') {
+    btnEl.innerHTML = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M2 2l12 6-12 6V9.6L9.5 8 2 6.4z" fill="currentColor"/></svg>';
+    btnEl.setAttribute('aria-label', '发送');
+    if (b === 'typing') {
+      textEl.textContent = '帮我介绍一下这个 macOS 主题都有哪些特性?';
+      textEl.style.color = 'var(--dsw-alias-label-primary,#1D1D1F)';
+    } else {
+      textEl.textContent = '继续输入…';
+      textEl.style.color = '';
+    }
+  }
 })();
 </script>
 <script> ... </script> 块复制,

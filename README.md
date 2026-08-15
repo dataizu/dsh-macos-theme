@@ -15,9 +15,19 @@
 
 ![浅色模式](screenshots/light.png)
 
-### 鲸鱼发送按钮(特写)
+### 鲸鱼发送按钮(三种状态)
 
-![鲸鱼发送按钮](screenshots/button.png)
+未发送(空闲,静态鲸鱼):
+
+![未发送](screenshots/button-idle.png)
+
+输入文字时(鲸鱼保持静态,仅输入框有内容):
+
+![输入文字](screenshots/button-typing.png)
+
+发送之后(运行中:摆尾游动 + 喷水泡 + 蓝色呼吸光环 + 水母发光):
+
+![发送之后](screenshots/button-running.png)
 
 ### 深色模式
 
