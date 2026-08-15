@@ -1,11 +1,15 @@
-# DSH macOS Theme
+# 🐋 鲸鱼戏水 · DSH Whale Aqua Theme
 
 给 [DeepSeek Harness](https://www.deepseek.com) Web GUI 用的 **macOS 风格主题 + 水中鲸鱼动态背景**。
 适用于本地运行的 DeepSeek Harness Web 界面。
 
 ## 🖼️ 预览
 
-> 截图来自仓库内 `demo/preview.html`(纯演示页,使用真实主题 CSS 与背景脚本,内容为虚构示例)。
+> 截图与动图来自仓库内 `demo/preview.html`(纯演示页,使用真实主题 CSS 与背景脚本,内容为虚构示例)。
+
+### 🎬 动态效果(鲸鱼游动 + 气泡 + 喷水 + 水母发光)
+
+![动态预览](screenshots/whale-animation.gif)
 
 ### 浅色模式(运行中)
 
@@ -60,7 +64,7 @@
 3. 若仍找不到,请停下来询问用户路径,不要瞎猜。
 
 ## 第 2 步:获取主题文件
-执行 `git clone https://github.com/dataizu/dsh-macos-theme` 到临时目录(记为 `<THEME>`)。
+执行 `git clone https://github.com/dataizu/dsh-whale-aqua-theme` 到临时目录(记为 `<THEME>`)。
 若网络受限,让用户手动下载该仓库的 zip 并解压,继续后面的步骤。
 
 ## 第 3 步:备份原文件

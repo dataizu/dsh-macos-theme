@@ -17,7 +17,7 @@
 3. 若仍找不到,请停下来询问用户路径,不要瞎猜。
 
 ## 第 2 步:获取主题文件
-执行 `git clone https://github.com/dataizu/dsh-macos-theme` 到临时目录(记为 `<THEME>`)。
+执行 `git clone https://github.com/dataizu/dsh-whale-aqua-theme` 到临时目录(记为 `<THEME>`)。
 若网络受限,让用户手动下载该仓库的 zip 并解压,继续后面的步骤。
 
 ## 第 3 步:备份原文件
